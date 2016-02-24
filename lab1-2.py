@@ -44,7 +44,7 @@ def stfu():
     func()
     return Response(response='Shutting up!', mimetype="text/plain", status=HTTP_OK)
 
-@app.route('/v1/list', methods=['GET', 'OPTIONS'])
+@app.route('/v1/notes', methods=['GET', 'OPTIONS'])
 def v1_list():
     if request.method == 'OPTIONS':
         resp = Response(response='Listed methods', mimetype='text/plain', status=HTTP_OK)
@@ -73,7 +73,7 @@ def note_exists(note_id_string):
         return -1
     return note_id_int
 
-@app.route('/v1/note/<note_id>', methods=['GET'])
+@app.route('/v1/notes/<note_id>', methods=['GET'])
 def v1_note(note_id):
     note_id_int = note_exists(note_id)
     if note_id_int < 0:
