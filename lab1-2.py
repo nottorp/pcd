@@ -61,14 +61,11 @@ def v1_list():
     return Response(response=json.dumps(res), mimetype='application/json', status=my_status)
 
 def note_exists(note_id_string):
-    no_id = False
     try:
         note_id_int = int(note_id_string)
     except:
-        no_id = True
-    if (not no_id)  and (not data.has_key(note_id_int)):
-        no_id = True
-    if no_id:
+        return -1
+    if not data.has_key(note_id_int):
         return -1
     return note_id_int
 
@@ -105,7 +102,7 @@ def v1_new_note():
     return Response(response=json.dumps(res), mimetype='application/json', status=HTTP_OK)
 
 # These two should be collapsed into one somehow - need a little experimentation with Flask for that
-@app.route('/v1/set_title/<note_id>', methods=['PUT'])
+@app.route('/v1/set_title/<note_id>', methods=['PUT', 'POST'])
 def v1_set_title(note_id):
     if request.headers['Content-Type'] != 'application/json':
         return Response(response="Gimme JSON!", mimetype='text/plain', status=ERR_GIMME_JSON)
@@ -118,7 +115,7 @@ def v1_set_title(note_id):
     return Response(response="Title modified succesfully!", mimetype="text/plain", status=HTTP_OK)
 
 # This and the one above should be collapsed into one somehow - need a little experimentation with Flask for that
-@app.route('/v1/set_content/<note_id>', methods=['PUT'])
+@app.route('/v1/set_content/<note_id>', methods=['PUT', 'POST'])
 def v1_set_content(note_id):
     if request.headers['Content-Type'] != 'application/json':
         return Response(response="Gimme JSON!", mimetype='text/plain', status=ERR_GIMME_JSON)
