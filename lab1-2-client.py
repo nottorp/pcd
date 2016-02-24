@@ -30,6 +30,12 @@ def test_delete(note_id):
     print "Status code is:", r.status_code
     print "Text is:", r.text
 
+def test_options():
+    r = requests.options('http://127.0.0.1:8888/v1/list')
+    print "Status code is:", r.status_code
+    print "Text is:", r.text
+    print "Allow header:", r.headers['Allow']
+
 if sys.argv[1] == 'a':
     test_add(sys.argv[2])
 elif sys.argv[1] == 'st':
@@ -38,4 +44,5 @@ elif sys.argv[1] == 'sc':
     test_edit(sys.argv[2], True, sys.argv[3])
 elif sys.argv[1] == 'd':
     test_delete(sys.argv[2])
-
+elif sys.argv[1] == 'o':
+    test_options()

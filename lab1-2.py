@@ -44,8 +44,12 @@ def stfu():
     func()
     return Response(response='Shutting up!', mimetype="text/plain", status=HTTP_OK)
 
-@app.route('/v1/list', methods=['GET'])
+@app.route('/v1/list', methods=['GET', 'OPTIONS'])
 def v1_list():
+    if request.method == 'OPTIONS':
+        resp = Response(response='Listed methods', mimetype='text/plain', status=HTTP_OK)
+        resp.headers['Allow'] = 'GET, OPTIONS'
+        return resp
     res = {}
     res['notes'] = []
     for id, content in data.iteritems():
