@@ -84,7 +84,7 @@ def v1_note(note_id):
     res['content'] = data[note_id_int]['content']
     return Response(response=json.dumps(res), mimetype='application/json', status=HTTP_OK)
 
-@app.route('/v1/new_note', methods=['POST'])
+@app.route('/v1/notes/create', methods=['POST'])
 def v1_new_note():
     if request.headers['Content-Type'] != 'application/json':
         return Response(response="Gimme JSON!", mimetype='text/plain', status=ERR_GIMME_JSON)
@@ -106,7 +106,7 @@ def v1_new_note():
     return Response(response=json.dumps(res), mimetype='application/json', status=HTTP_OK)
 
 # These two should be collapsed into one somehow - need a little experimentation with Flask for that
-@app.route('/v1/set_title/<note_id>', methods=['PUT', 'POST'])
+@app.route('/v1/notes/set_title/<note_id>', methods=['PUT'])
 def v1_set_title(note_id):
     if request.headers['Content-Type'] != 'application/json':
         return Response(response="Gimme JSON!", mimetype='text/plain', status=ERR_GIMME_JSON)
@@ -116,10 +116,12 @@ def v1_set_title(note_id):
     if note_id_int < 0:
         return Response(response="Not Found!", mimetype="text/plain", status=ERR_NOTFOUND)
     data[note_id_int]['title'] = request.json['title']
+    if request.json.has_key('content'):
+        data[note_id_int]['content'] = request.json['content']
     return Response(response="Title modified succesfully!", mimetype="text/plain", status=HTTP_OK)
 
 # This and the one above should be collapsed into one somehow - need a little experimentation with Flask for that
-@app.route('/v1/set_content/<note_id>', methods=['PUT', 'POST'])
+@app.route('/v1/notes/set_content/<note_id>', methods=['PUT'])
 def v1_set_content(note_id):
     if request.headers['Content-Type'] != 'application/json':
         return Response(response="Gimme JSON!", mimetype='text/plain', status=ERR_GIMME_JSON)
@@ -128,10 +130,12 @@ def v1_set_content(note_id):
     note_id_int = note_exists(note_id)
     if note_id_int < 0:
         return Response(response="Not Found!", mimetype="text/plain", status=ERR_NOTFOUND)
+    print "Content content:", request.json['content']
     data[note_id_int]['content'] = request.json['content']
+    print "Content content after:", data[note_id_int]['content']
     return Response(response="Content modified succesfully!", mimetype="text/plain", status=HTTP_OK)
 
-@app.route('/v1/delete/<note_id>', methods=['DELETE'])
+@app.route('/v1/notes/delete/<note_id>', methods=['DELETE'])
 def v1_delete(note_id):
     note_id_int = note_exists(note_id)
     if note_id_int < 0:
