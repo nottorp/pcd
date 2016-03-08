@@ -1,0 +1,8 @@
+Transputer history
+Occam as C for transputers
+Current versions of occam
+Whines about the versions being not so current
+Hello world
+Channels
+Simple parallelism with channels
+Matrix multiplication?
