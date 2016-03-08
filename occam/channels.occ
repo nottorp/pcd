@@ -1,0 +1,31 @@
+#INCLUDE "course.module"
+
+PROC sender (CHAN INT write!)
+  INT seed:
+  SEQ
+    seed := 5000
+    WHILE TRUE
+      INT x:
+      SEQ
+        x, seed := random(256, seed)
+        write ! x
+:
+
+PROC receiver (CHAN INT read?, CHAN BYTE out!)
+  INT val:
+  WHILE TRUE
+    INT val:
+    SEQ
+      read ? val
+      out.int(val, 0, out)
+      out.string("*n", 0, out)
+:
+
+PROC mainisnotspecial (CHAN BYTE out!)
+  CHAN INT comms:
+  PAR
+    sender(comms)
+    receiver(comms, out)
+:
+
+
