@@ -1,0 +1,51 @@
+#INCLUDE "course.module"
+
+VAL INT howmany IS 500000000:
+
+PROC debugint(VAL []BYTE msg, VAL INT val, CHAN BYTE log!)
+  SEQ  
+    out.string(msg, 0, log)
+    out.string(": ", 0, log)
+    out.int(val, 0, log)
+    out.string("*n", 0, log)
+:
+
+PROC genrandoms(VAL INT len, VAL INT max, CHAN INT out!)
+  INT seed, x:
+  TIMER time:
+  SEQ
+    time ? seed
+    SEQ i = 0 FOR len
+      SEQ
+        x, seed := random(max, seed)
+        out ! x
+:
+
+PROC avgchannel(VAL INT len, CHAN INT in?, CHAN INT out!)
+  INT counter, x, avg:
+  SEQ
+    counter := 0
+    avg := 0
+    WHILE counter < len
+      SEQ
+        in ? x
+	counter := counter + 1
+        avg := avg + ((x - avg) / counter)
+    out ! avg
+:
+
+PROC coliva (CHAN BYTE out!)
+  CHAN INT r2a1, a2m1, r2a2, a2m2:
+  INT avg1, avg2, avgfinal:
+  SEQ
+    PAR
+      genrandoms(howmany, 1000, r2a1)
+      avgchannel(howmany, r2a1, a2m1)
+      a2m1 ? avg1
+      genrandoms(howmany, 1000, r2a2)
+      avgchannel(howmany, r2a2, a2m2)
+      a2m2 ? avg2
+    avgfinal := (avg1 + avg2) / 2
+    debugint("Average is", avgfinal, out)
+:
+
